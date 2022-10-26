@@ -45,6 +45,46 @@ app.post("/user/save", (req, res) => {
     }
 });
 
+app.get("/user/:userId", function (req, res) {
+    var userId = req.params.tagId;
+    if (userId) {
+        MySQLManager.readTableWhere(MySQLManager.tables.USERS, "id_user", userId)
+            .then((result) => {
+                res.send({
+                    status: "OK",
+                    result,
+                });
+            })
+            .catch((err) => {
+                res.send({
+                    status: "KO",
+                    message: err,
+                });
+            });
+    } else {
+        res.end({
+            status: "KO",
+            message: "No userId added in API",
+        });
+    }
+});
+
+app.get("/users", function (req, res) {
+    MySQLManager.readTable(MySQLManager.tables.USERS)
+        .then((result) => {
+            res.send({
+                status: "OK",
+                result,
+            });
+        })
+        .catch((err) => {
+            res.send({
+                status: "KO",
+                message: err,
+            });
+        });
+});
+
 app.listen(port, () => {
     console.log(`[Log] [MySQLMicroservice] Server started at localhost on port ${port}`);
     MySQLManager.connectToDatabase();
