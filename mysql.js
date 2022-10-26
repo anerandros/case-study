@@ -4,87 +4,116 @@
  * si lascia schiantata in codice
  */
 const mysql = require("mysql");
-const MYSQL_DEBUG = true;
-var con = mysql.createConnection({
-    host: "localhost",
-    user: "yourusername",
-    password: "yourpassword",
-});
 
-function connectToDatabase() {
-    return new Promise(function (resolve, reject) {
-        con.connect(function (err) {
-            if (err) {
-                MYSQL_DEBUG && console.log("[Log] [MySQL] Error while connecting to MySQL");
-                reject(err);
-            }
-            MYSQL_DEBUG && console.log("[Log] [MySQL] Correctly connected to MySQL");
-            resolve(con);
-        });
+var MySQLManager = (function () {
+    var MYSQL_DEBUG = true;
+
+    const _tables = {
+        USERS: "users",
+    };
+
+    var _con = mysql.createConnection({
+        host: "localhost",
+        user: "yourusername",
+        password: "yourpassword",
     });
-}
 
-function addToTable(tableName, data) {
-    // Identifico le colonne della tabella che serviranno nella query
-    var columnsToAdd = Object.keys(data)
-        .map((key, index) => {
-            if (index !== data.length - 1) {
-                return key + ", ";
-            }
-            return key;
-        })
-        .join("");
-    var columns = "(" + columnsToAdd + ")";
+    function _setDebug(valueToSet) {
+        MYSQL_DEBUG = valueToSet;
+    }
 
-    // Indentifico i valori da inserire nella row
-    var valuesToAdd = Object.keys(data)
-        .map((key, index) => {
-            var value = data[key];
-            if (index !== data.length - 1) {
-                return value + ", ";
-            }
-            return value;
-        })
-        .join("");
-    var values = "(" + valuesToAdd + ")";
-
-    return new Promise(function (resolve, reject) {
-        var sql = "INSERT INTO " + tableName + " " + columns + " VALUES " + values;
-        con.query(sql, function (err) {
-            if (err) {
-                MYSQL_DEBUG && console.log("[Log] [MySQL] Error while adding data to table");
-                reject(err);
-            }
-            MYSQL_DEBUG && console.log("[Log] [MySQL] Correctly added data to table");
-            resolve(con);
+    function _connectToDatabase() {
+        return new Promise(function (resolve, reject) {
+            _con.connect(function (err) {
+                if (err) {
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Error while connecting to MySQL");
+                    reject(err);
+                } else {
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Correctly connected to MySQL");
+                    resolve();
+                }
+            });
         });
-    });
-}
+    }
 
-function readTable(tableName) {
-    return new Promise(function (resolve, reject) {
-        var sql = "SELECT * FROM " + tableName;
-        con.query(sql, function (err, result) {
-            if (err) {
-                MYSQL_DEBUG && console.log("[Log] [MySQL] Error while reading table");
-                reject(err);
-            }
-            MYSQL_DEBUG && console.log("[Log] [MySQL] Table correctly read");
-            resolve(result);
-        });
-    });
-}
+    function _addToTable(tableName, data) {
+        // Identifico le colonne della tabella che serviranno nella query
+        var columnsToAdd = Object.keys(data)
+            .map((key, index) => {
+                if (index !== data.length - 1) {
+                    return key + ", ";
+                }
+                return key;
+            })
+            .join("");
+        var columns = "(" + columnsToAdd + ")";
 
-function readTableWhere(tableName, column, value) {
-    return new Promise(function (resolve, reject) {
-        var sql = "SELECT * FROM " + tableName + " WHERE " + column + "=" + value;
-        con.query(sql, function (err, result) {
-            if (err) {
-                MYSQL_DEBUG && console.log("[Log] [MySQL] Error while reading table with condition");
-                reject(err);
-            }
-            MYSQL_DEBUG && console.log("[Log] [MySQL] Table with condition correctly read");
-            resolve(result);
+        // Indentifico i valori da inserire nella row
+        var valuesToAdd = Object.keys(data)
+            .map((key, index) => {
+                var value = data[key];
+                if (index !== data.length - 1) {
+                    return value + ", ";
+                }
+                return value;
+            })
+            .join("");
+        var values = "(" + valuesToAdd + ")";
+
+        return new Promise(function (resolve, reject) {
+            var sql = "INSERT INTO " + tableName + " " + columns + " VALUES " + values;
+            _con.query(sql, function (err) {
+                if (err) {
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Error while adding data to table");
+                    reject(err);
+                } else {
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Correctly added data to table");
+                    resolve();
+                }
+            });
         });
-    });
-}
+    }
+
+    function _readTable(tableName) {
+        return new Promise(function (resolve, reject) {
+            var sql = "SELECT * FROM " + tableName;
+            _con.query(sql, function (err, result) {
+                if (err) {
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Error while reading table");
+                    reject(err);
+                } else {
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Table correctly read");
+                    resolve(result);
+                }
+            });
+        });
+    }
+
+    function _readTableWhere(tableName, column, value) {
+        return new Promise(function (resolve, reject) {
+            var sql = "SELECT * FROM " + tableName + " WHERE " + column + "=" + value;
+            _con.query(sql, function (err, result) {
+                if (err) {
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Error while reading table with condition");
+                    reject(err);
+                } else {
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Table with condition correctly read");
+                    resolve(result);
+                }
+            });
+        });
+    }
+
+    return {
+        setDebug: _setDebug,
+
+        connectToDatabase: _connectToDatabase,
+        addToTable: _addToTable,
+        readTable: _readTable,
+        readTableWhere: _readTableWhere,
+
+        tables: _tables,
+    };
+})();
+
+exports.MySQLManager = MySQLManager;
