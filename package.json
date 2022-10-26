@@ -19,5 +19,8 @@
     "homepage": "https://github.com/anerandros/case-study#readme",
     "devDependencies": {
         "express": "^4.18.2"
+    },
+    "dependencies": {
+        "mysql": "^2.18.1"
     }
 }
