@@ -189,8 +189,78 @@ app.post("/product/save", (req, res) => {
     }
 });
 
+app.get("/product/:productId", function (req, res) {
+    var productId = req.params.productId;
+    if (productId) {
+        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
+        MySQLManager.readTableWhere(MySQLManager.tables.PRODUCT, "id_product", productId)
+            .then((result) => {
+                res.send({
+                    status: "OK",
+                    result,
+                });
+            })
+            .catch((err) => {
+                res.send({
+                    status: "KO",
+                    message: err,
+                });
+            });
+    } else {
+        res.end({
+            status: "KO",
+            message: "No productId added in API",
+        });
+    }
+});
+
 app.get("/products", function (req, res) {
     MySQLManager.readTable(MySQLManager.tables.PRODUCT)
+        .then((result) => {
+            res.send({
+                status: "OK",
+                result,
+            });
+        })
+        .catch((err) => {
+            res.send({
+                status: "KO",
+                message: err,
+            });
+        });
+});
+
+/*******************************************************
+ * ******************** PROSPECT ***********************
+ */
+app.post("/prospect/save", (req, res) => {
+    const parsedBody = req.body;
+    if (parsedBody) {
+        // Salviamo su DB
+        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
+        MySQLManager.addToTable(MySQLManager.tables.PROSPECT, parsedBody)
+            .then(() => {
+                res.send({
+                    status: "OK",
+                    message: "Row correctly added to table",
+                });
+            })
+            .catch((err) => {
+                res.send({
+                    status: "KO",
+                    message: err,
+                });
+            });
+    } else {
+        res.end({
+            status: "KO",
+            message: "Error in input",
+        });
+    }
+});
+
+app.get("/prospects", function (req, res) {
+    MySQLManager.readTable(MySQLManager.tables.PROSPECT)
         .then((result) => {
             res.send({
                 status: "OK",
