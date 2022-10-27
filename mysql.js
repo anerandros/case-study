@@ -9,13 +9,17 @@ var MySQLManager = (function () {
     var MYSQL_DEBUG = true;
 
     const _tables = {
-        USERS: "users",
+        USERS: "user",
+        PROSPECT: "prospect",
+        PRODUCT: "product",
+        BANK: "bank",
     };
 
     var _con = mysql.createConnection({
         host: "localhost",
-        user: "yourusername",
-        password: "yourpassword",
+        user: "root",
+        password: "",
+        database: "mutuiamo",
     });
 
     function _setDebug(valueToSet) {
@@ -39,7 +43,7 @@ var MySQLManager = (function () {
     function _addToTable(tableName, data) {
         // Identifico le colonne della tabella che serviranno nella query
         var columnsToAdd = Object.keys(data)
-            .map((key, index) => {
+            .map((key, index, data) => {
                 if (index !== data.length - 1) {
                     return key + ", ";
                 }
@@ -52,10 +56,10 @@ var MySQLManager = (function () {
         var valuesToAdd = Object.keys(data)
             .map((key, index) => {
                 var value = data[key];
-                if (index !== data.length - 1) {
-                    return value + ", ";
+                if (index !== Object.keys(data).length - 1) {
+                    return "'" + value + "', ";
                 }
-                return value;
+                return "'" + value + "'";
             })
             .join("");
         var values = "(" + valuesToAdd + ")";

@@ -15,9 +15,13 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send({
         status: "OK",
-        message: "MySQL writer online",
+        message: "Microservice online",
     });
 });
+
+/*******************************************************
+ * ********************** USERS ************************
+ */
 
 app.post("/user/save", (req, res) => {
     const parsedBody = req.body;
@@ -46,7 +50,7 @@ app.post("/user/save", (req, res) => {
 });
 
 app.get("/user/:userId", function (req, res) {
-    var userId = req.params.tagId;
+    var userId = req.params.userId;
     if (userId) {
         MySQLManager.readTableWhere(MySQLManager.tables.USERS, "id_user", userId)
             .then((result) => {
@@ -84,6 +88,10 @@ app.get("/users", function (req, res) {
             });
         });
 });
+
+/*******************************************************
+ * ********************** BANKS ************************
+ */
 
 app.listen(port, () => {
     console.log(`[Log] [MySQLMicroservice] Server started at localhost on port ${port}`);
