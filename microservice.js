@@ -94,6 +94,6 @@ app.get("/users", function (req, res) {
  */
 
 app.listen(port, () => {
-    console.log(`[Log] [MySQLMicroservice] Server started at localhost on port ${port}`);
+    console.log(`[Log] [Microservice] Server started at localhost on port ${port}`);
     MySQLManager.connectToDatabase();
 });
