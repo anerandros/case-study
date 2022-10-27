@@ -123,14 +123,13 @@ var MySQLManager = (function () {
                 _tables.BANK +
                 " ON prospect.id_bank = bank.id_bank" +
                 " WHERE prospect.id_user=" +
-                userId;
+                userId +
+                " ORDER BY prospect.data_prospect DESC LIMIT 1";
             _con.query(sql, function (err, result) {
                 if (err) {
                     MYSQL_DEBUG && console.log("[Log] [MySQL] Error in _prepareProspect");
                     reject(err);
                 } else {
-                    var countSql = "";
-
                     MYSQL_DEBUG && console.log("[Log] [MySQL] Prospect correctly read");
                     resolve(result);
                 }
