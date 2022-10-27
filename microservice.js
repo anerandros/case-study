@@ -4,11 +4,6 @@
 const { MySQLManager } = require("./mysql");
 
 /**
- * Import dello Utils
- */
-const { Utils } = require("./utils");
-
-/**
  * Configurazione microservizio writer per scrivere e leggere su database MySQL
  */
 const express = require("express");
@@ -33,7 +28,19 @@ app.post("/user/save", (req, res) => {
     if (parsedBody) {
         // Salviamo su DB
         // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        Utils.addToTable(MySQLManager.tables.USERS, parsedBody);
+        MySQLManager.addToTable(MySQLManager.tables.USERS, parsedBody)
+            .then(() => {
+                res.send({
+                    status: "OK",
+                    message: "Row correctly added to table",
+                });
+            })
+            .catch((err) => {
+                res.send({
+                    status: "KO",
+                    message: err,
+                });
+            });
     } else {
         res.end({
             status: "KO",
@@ -46,7 +53,19 @@ app.get("/user/:userId", function (req, res) {
     var userId = req.params.userId;
     if (userId) {
         // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        Utils.readTableWhere(MySQLManager.tables.USERS, "id_user", userId);
+        MySQLManager.readTableWhere(MySQLManager.tables.USERS, "id_user", userId)
+            .then((result) => {
+                res.send({
+                    status: "OK",
+                    result,
+                });
+            })
+            .catch((err) => {
+                res.send({
+                    status: "KO",
+                    message: err,
+                });
+            });
     } else {
         res.end({
             status: "KO",
@@ -56,8 +75,19 @@ app.get("/user/:userId", function (req, res) {
 });
 
 app.get("/users", function (req, res) {
-    // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-    Utils.readTable(MySQLManager.tables.USERS);
+    MySQLManager.readTable(MySQLManager.tables.USERS)
+        .then((result) => {
+            res.send({
+                status: "OK",
+                result,
+            });
+        })
+        .catch((err) => {
+            res.send({
+                status: "KO",
+                message: err,
+            });
+        });
 });
 
 /*******************************************************
@@ -68,24 +98,19 @@ app.post("/bank/save", (req, res) => {
     if (parsedBody) {
         // Salviamo su DB
         // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        Utils.addToTable(MySQLManager.tables.BANK, parsedBody);
-    } else {
-        res.end({
-            status: "KO",
-            message: "Error in input",
-        });
-    }
-});
-
-/*******************************************************
- * ********************** PRODUCT ************************
- */
-app.post("/product/save", (req, res) => {
-    const parsedBody = req.body;
-    if (parsedBody) {
-        // Salviamo su DB
-        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        Utils.addToTable(MySQLManager.tables.PRODUCT, parsedBody);
+        MySQLManager.addToTable(MySQLManager.tables.BANK, parsedBody)
+            .then(() => {
+                res.send({
+                    status: "OK",
+                    message: "Row correctly added to table",
+                });
+            })
+            .catch((err) => {
+                res.send({
+                    status: "KO",
+                    message: err,
+                });
+            });
     } else {
         res.end({
             status: "KO",
