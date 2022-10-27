@@ -119,6 +119,92 @@ app.post("/bank/save", (req, res) => {
     }
 });
 
+app.get("/bank/:bankId", function (req, res) {
+    var bankId = req.params.bankId;
+    if (bankId) {
+        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
+        MySQLManager.readTableWhere(MySQLManager.tables.BANK, "id_bank", bankId)
+            .then((result) => {
+                res.send({
+                    status: "OK",
+                    result,
+                });
+            })
+            .catch((err) => {
+                res.send({
+                    status: "KO",
+                    message: err,
+                });
+            });
+    } else {
+        res.end({
+            status: "KO",
+            message: "No bankId added in API",
+        });
+    }
+});
+
+app.get("/banks", function (req, res) {
+    MySQLManager.readTable(MySQLManager.tables.BANK)
+        .then((result) => {
+            res.send({
+                status: "OK",
+                result,
+            });
+        })
+        .catch((err) => {
+            res.send({
+                status: "KO",
+                message: err,
+            });
+        });
+});
+
+/*******************************************************
+ * ******************** PRODUCT ************************
+ */
+app.post("/product/save", (req, res) => {
+    const parsedBody = req.body;
+    if (parsedBody) {
+        // Salviamo su DB
+        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
+        MySQLManager.addToTable(MySQLManager.tables.PRODUCT, parsedBody)
+            .then(() => {
+                res.send({
+                    status: "OK",
+                    message: "Row correctly added to table",
+                });
+            })
+            .catch((err) => {
+                res.send({
+                    status: "KO",
+                    message: err,
+                });
+            });
+    } else {
+        res.end({
+            status: "KO",
+            message: "Error in input",
+        });
+    }
+});
+
+app.get("/products", function (req, res) {
+    MySQLManager.readTable(MySQLManager.tables.PRODUCT)
+        .then((result) => {
+            res.send({
+                status: "OK",
+                result,
+            });
+        })
+        .catch((err) => {
+            res.send({
+                status: "KO",
+                message: err,
+            });
+        });
+});
+
 app.listen(port, () => {
     console.log(`[Log] [Microservice] Server started at localhost on port ${port}`);
     MySQLManager.connectToDatabase();
