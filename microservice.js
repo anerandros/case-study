@@ -300,11 +300,11 @@ app.get("/prospects", function (req, res) {
         });
 });
 
-app.get("/prospect/status/:prospectId", function (req, res) {
-    var prospectId = req.params.prospectId;
-    if (prospectId) {
+app.get("/prospect/status/:userId", function (req, res) {
+    var userId = req.params.userId;
+    if (userId) {
         // N.B.: MAI inviare dati senza parsarli. Si omette per semplicità.
-        MySQLManager.prepareProspect(prospectId)
+        MySQLManager.prepareProspect(userId)
             .then((result) => {
                 res.send({
                     status: "OK",
@@ -320,7 +320,7 @@ app.get("/prospect/status/:prospectId", function (req, res) {
     } else {
         res.end({
             status: "KO",
-            message: "No prospectId added in API",
+            message: "No userId added in API",
         });
     }
 });

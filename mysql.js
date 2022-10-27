@@ -108,7 +108,7 @@ var MySQLManager = (function () {
         });
     }
 
-    function _prepareProspect(prospectId) {
+    function _prepareProspect(userId) {
         return new Promise(function (resolve, reject) {
             var sql =
                 "SELECT * FROM " +
@@ -122,13 +122,15 @@ var MySQLManager = (function () {
                 " INNER JOIN " +
                 _tables.BANK +
                 " ON prospect.id_bank = bank.id_bank" +
-                " WHERE id_prospect=" +
-                prospectId;
+                " WHERE prospect.id_user=" +
+                userId;
             _con.query(sql, function (err, result) {
                 if (err) {
                     MYSQL_DEBUG && console.log("[Log] [MySQL] Error in _prepareProspect");
                     reject(err);
                 } else {
+                    var countSql = "";
+
                     MYSQL_DEBUG && console.log("[Log] [MySQL] Prospect correctly read");
                     resolve(result);
                 }
