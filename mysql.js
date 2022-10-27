@@ -130,8 +130,21 @@ var MySQLManager = (function () {
                     MYSQL_DEBUG && console.log("[Log] [MySQL] Error in _prepareProspect");
                     reject(err);
                 } else {
-                    MYSQL_DEBUG && console.log("[Log] [MySQL] Prospect correctly read");
-                    resolve(result);
+                    if (result && result[0]) {
+                        countSql = "SELECT COUNT(*) FROM " + _tables.PROSPECT + " WHERE prospect.id_user=" + result[0].id_user;
+                        _con.query(countSql, function (errorCount, counter) {
+                            if (errorCount) {
+                                MYSQL_DEBUG && console.log("[Log] [MySQL] Error in _prepareProspect::count");
+                                reject(errorCount);
+                            } else {
+                                MYSQL_DEBUG && console.log("[Log] [MySQL] Prospect correctly read");
+                                result[0].counter = counter;
+                                resolve(result);
+                            }
+                        });
+                    } else {
+                        reject("No result found in _prepareProspect");
+                    }
                 }
             });
         });
