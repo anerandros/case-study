@@ -259,6 +259,31 @@ app.post("/prospect/save", (req, res) => {
     }
 });
 
+app.get("/prospect/:prospectId", function (req, res) {
+    var prospectId = req.params.prospectId;
+    if (prospectId) {
+        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
+        MySQLManager.readTableWhere(MySQLManager.tables.PROSPECT, "id_prospect", prospectId)
+            .then((result) => {
+                res.send({
+                    status: "OK",
+                    result,
+                });
+            })
+            .catch((err) => {
+                res.send({
+                    status: "KO",
+                    message: err,
+                });
+            });
+    } else {
+        res.end({
+            status: "KO",
+            message: "No prospectId added in API",
+        });
+    }
+});
+
 app.get("/prospects", function (req, res) {
     MySQLManager.readTable(MySQLManager.tables.PROSPECT)
         .then((result) => {

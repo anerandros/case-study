@@ -10,4 +10,6 @@ L'architettura a microservizi per gestire il case study inviato richiederebbe la
 
 Analogo discorso per ms BANK, PRODUCT E PROSPECT. Ogni ms deve avere le API basiche per interagire con l'entità. Ogni ms deve poter connettersi al quinto ms, quello basato sulla persistenza in MySQL. Ogni dato deve essere correttamente parsato prima di essere inviato e poter interagire col DB, per evitare sql injection. Tutto questo viene omesso per semplicità. Sempre per semplicità, si creerà un ms unico che gira sulla porta 3000.
 
-### Prova
+### Configurazione database
+
+Configurare i dati di connessione col DB dentro il file mysql.js. E' possibile lasciare il logger attivo per leggere le operazioni di lettura e scrittura su DB.
