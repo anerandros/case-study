@@ -108,6 +108,34 @@ var MySQLManager = (function () {
         });
     }
 
+    function _prepareProspect(prospectId) {
+        return new Promise(function (resolve, reject) {
+            var sql =
+                "SELECT * FROM " +
+                _tables.PROSPECT +
+                " INNER JOIN " +
+                _tables.USERS +
+                " ON prospect.id_user = user.id_user" +
+                " INNER JOIN " +
+                _tables.PRODUCT +
+                " ON prospect.id_product = product.id_product" +
+                " INNER JOIN " +
+                _tables.BANK +
+                " ON prospect.id_bank = bank.id_bank" +
+                " WHERE id_prospect=" +
+                prospectId;
+            _con.query(sql, function (err, result) {
+                if (err) {
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Error in _prepareProspect");
+                    reject(err);
+                } else {
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Prospect correctly read");
+                    resolve(result);
+                }
+            });
+        });
+    }
+
     return {
         setDebug: _setDebug,
 
@@ -117,6 +145,9 @@ var MySQLManager = (function () {
         readTableWhere: _readTableWhere,
 
         tables: _tables,
+
+        // Funzione ad hoc, sbagliata, ma utile al fine del progetto.
+        prepareProspect: _prepareProspect,
     };
 })();
 

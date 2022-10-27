@@ -300,6 +300,31 @@ app.get("/prospects", function (req, res) {
         });
 });
 
+app.get("/prospect/status/:prospectId", function (req, res) {
+    var prospectId = req.params.prospectId;
+    if (prospectId) {
+        // N.B.: MAI inviare dati senza parsarli. Si omette per semplicità.
+        MySQLManager.prepareProspect(prospectId)
+            .then((result) => {
+                res.send({
+                    status: "OK",
+                    result,
+                });
+            })
+            .catch((err) => {
+                res.end({
+                    status: "KO",
+                    message: err,
+                });
+            });
+    } else {
+        res.end({
+            status: "KO",
+            message: "No prospectId added in API",
+        });
+    }
+});
+
 app.listen(port, () => {
     console.log(`[Log] [Microservice] Server started at localhost on port ${port}`);
     MySQLManager.connectToDatabase();
