@@ -37,3 +37,7 @@ Ogni endpoint di tipo `/entity/save` salva sulla tabella entity l'oggetto passat
 Ogni endpoint di tipo `/entity/:id` eseguirà una ricerca (senza LIMIT) sulla chiave primaria della tabella entity.
 Ogni endpoint di tipo `/entityS` eseguirà una SELECT \* sulla tabella.
 L'endpoint finale `/prospect/status/:userId` è una get che restituisce l'ultima prospect suggerita per l'utente con :userId come id_user. Si noti che viene rilasciata in risposta la tabella MySQL, ma internamente, nel codice, viene parsato opportunamento con il modello. C'è uno switch all'interno dell'oggetto `getProspect()` che restituisce il formato corretto a seconda della banca. Si omette per semplicità tutto lo sviluppo, il primo (Intesa Sanpaolo) è quello già funzionante. Si vedano commenti sul codice.
+
+### Typescript
+
+Si omette TypeScript per semplicità. Ovviamente è opportuno lavorare tipizzati.
