@@ -4,6 +4,12 @@
 const { MySQLManager } = require("./mysql");
 
 /**
+ * Import dei modelli
+ */
+const { User } = require("./models/user");
+const { Prospect } = require("./models/prospect");
+
+/**
  * Configurazione microservizio writer per scrivere e leggere su database MySQL
  */
 const express = require("express");
@@ -55,6 +61,12 @@ app.get("/user/:userId", function (req, res) {
         // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
         MySQLManager.readTableWhere(MySQLManager.tables.USERS, "id_user", userId)
             .then((result) => {
+                // Esempio di gestione del dato
+                if (result && result[0]) {
+                    const userModel = new User(result[0]);
+                    console.log(userModel.getUser());
+                }
+                // ----------------------------
                 res.send({
                     status: "OK",
                     result,
@@ -306,6 +318,12 @@ app.get("/prospect/status/:userId", function (req, res) {
         // N.B.: MAI inviare dati senza parsarli. Si omette per semplicità.
         MySQLManager.prepareProspect(userId)
             .then((result) => {
+                // Esempio di gestione del dato
+                if (result && result[0]) {
+                    const prospectModel = new Prospect(result[0]);
+                    console.log(prospectModel.getProspect());
+                }
+                // ----------------------------
                 res.send({
                     status: "OK",
                     result,
