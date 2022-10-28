@@ -13,6 +13,10 @@ Analogo discorso per ms BANK, PRODUCT E PROSPECT. Ogni ms deve avere le API basi
 ### Installazione
 
 Clonare la repository ed installare i pacchetti. Avviare il comando "npm run start" e quindi il server.
+Dunque, installare i pacchetti:
+`npm install`
+Avviare il microservizio:
+`npm run start`
 
 ### Configurazione database
 
