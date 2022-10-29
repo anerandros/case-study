@@ -10,7 +10,7 @@ Clonare la repository, installare i pacchetti `npm install`. Importare il databa
 
 ### Configurazione database
 
-Configurare i dati di connessione col DB dentro il file mysql.js. E' possibile lasciare il logger attivo per leggere le operazioni di lettura e scrittura su DB.
+Configurare i dati di connessione col DB dentro il file mysql.js. Creare un database `mutiamo`. Importare il file db.sql dentro il database appena creato. E' possibile lasciare il logger attivo per leggere le operazioni di lettura e scrittura su DB.
 Nessun controllo è stato effettuato sul valore dei campi, controlli come stesso nome o stessi valori. L'importante è l'ID univoco auto increment.
 Nessun controllo sui LIMIT è inserito, anche nelle condizioni con le WHERE, per semplicità.
 Il MySQLManager dovrebbe poter fare tutte le operazioni sulla tabelle ma per semplicità abbiamo aggiunto una funzione ad hoc per preparare i prospetti. Il concetto è sbagliato ma l'utilità è notevole.
