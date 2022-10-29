@@ -36,7 +36,16 @@ Il server ha i seguenti endpoint:
 Ogni endpoint di tipo `/entity/save` salva sulla tabella entity l'oggetto passato in POST. E' opportuno configurare le chiavi dell'oggetto così come i nomi delle colonne del database.
 Ogni endpoint di tipo `/entity/:id` eseguirà una ricerca (senza LIMIT) sulla chiave primaria della tabella entity.
 Ogni endpoint di tipo `/entityS` eseguirà una SELECT \* sulla tabella.
-L'endpoint finale `/prospect/status/:userId` è una get che restituisce l'ultima prospect suggerita per l'utente con :userId come id_user. Si noti che viene rilasciata in risposta la tabella MySQL, ma internamente, nel codice, viene parsato opportunamento con il modello. C'è uno switch all'interno dell'oggetto `getProspect()` che restituisce il formato corretto a seconda della banca. Si omette per semplicità tutto lo sviluppo, il primo (Intesa Sanpaolo) è quello già funzionante. Si vedano commenti sul codice.
+L'endpoint finale `/prospect/status/:userId` è una get che restituisce l'ultima prospect suggerita per l'utente con :userId come id_user. Si noti che viene rilasciata in risposta la tabella MySQL, ma internamente, nel codice, viene parsato opportunamento con il modello. C'è uno switch all'interno dell'oggetto `getProspect()` che restituisce il formato corretto a seconda della banca. Si omette per semplicità tutto lo sviluppo, il primo (Intesa Sanpaolo) è quello già funzionante. Si vedano commenti sul codice. Un ultimo appunto, si fa l'esempio di inserimento di un utente nel database, quindi POST su /user/save con formato raw JSON tramite Postman. Il payload sarà:
+
+```
+{
+    "nome_user": "Mutu",
+    "cognome_user": "iamo",
+    "email_user": "mutiamo@mutuiamo.com",
+    "cf_user": "XXXXXXXXXXXXXX"
+}
+```
 
 ### Typescript
 
