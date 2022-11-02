@@ -124,26 +124,19 @@ var MySQLManager = (function () {
                 " ON prospect.id_bank = bank.id_bank" +
                 " WHERE prospect.id_user=" +
                 userId +
-                " ORDER BY prospect.data_prospect DESC LIMIT 1";
-            _con.query(sql, function (err, result) {
+                " ORDER BY prospect.data_prospect DESC";
+            _con.query(sql, function (err, results) {
                 if (err) {
                     MYSQL_DEBUG && console.log("[Log] [MySQL] Error in _prepareProspect");
                     reject(err);
                 } else {
-                    if (result && result[0]) {
-                        countSql = "SELECT COUNT(*) FROM " + _tables.PROSPECT + " WHERE prospect.id_user=" + result[0].id_user;
-                        _con.query(countSql, function (errorCount, counter) {
-                            if (errorCount) {
-                                MYSQL_DEBUG && console.log("[Log] [MySQL] Error in _prepareProspect::count");
-                                reject(errorCount);
-                            } else {
-                                MYSQL_DEBUG && console.log("[Log] [MySQL] Prospect correctly read");
-                                result[0].counter = counter;
-                                resolve(result);
-                            }
-                        });
+                    MYSQL_DEBUG && console.log("[Log] [MySQL] Prospect correctly read");
+                    if (results && results[0]) {
+                        var lastResult = results[0];
+                        lastResult.counter = results.length;
+                        resolve(lastResult);
                     } else {
-                        reject("No result found in _prepareProspect");
+                        reject("No prospect found.");
                     }
                 }
             });

@@ -97,24 +97,22 @@ app.get("/user/:userId/prospect", function (req, res) {
         MySQLManager.prepareProspect(userId)
             .then((result) => {
                 // Esempio di gestione del dato
-                if (result && result[0]) {
-                    var prospectModel;
-                    switch (result[0].nome_bank) {
-                        case BANKS.INTESA:
-                            prospectModel = new IntesaSanpaolo(result[0]);
-                            break;
-                        case BANKS.CREDIT:
-                            prospectModel = new CreditAgricole(result[0]);
-                            break;
-                        case BANKS.BNL:
-                            prospectModel = new BNL(result[0]);
-                            break;
-                        default:
-                            prospectModel = new Prospect(result[0]);
-                            break;
-                    }
-                    console.log(prospectModel.getProspect());
+                var prospectModel;
+                switch (result.nome_bank) {
+                    case BANKS.INTESA:
+                        prospectModel = new IntesaSanpaolo(result);
+                        break;
+                    case BANKS.CREDIT:
+                        prospectModel = new CreditAgricole(result);
+                        break;
+                    case BANKS.BNL:
+                        prospectModel = new BNL(result);
+                        break;
+                    default:
+                        prospectModel = new Prospect(result);
+                        break;
                 }
+                console.log(prospectModel.getProspect());
                 // ----------------------------
                 res.send({
                     status: "OK",
