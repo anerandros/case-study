@@ -6,8 +6,12 @@ const { MySQLManager } = require("./mysql");
 /**
  * Import dei modelli
  */
-const { User } = require("./models/user");
-const { Prospect } = require("./models/prospect");
+const { User } = require("./models/user.class");
+const { BANKS } = require("./models/bank.class");
+const { Prospect } = require("./models/prospect.class");
+const { IntesaSanpaolo } = require("./models/intesasanpaolo.class");
+const { CreditAgricole } = require("./models/creditagricole.class");
+const { BNL } = require("./models/bnl.class");
 
 /**
  * Configurazione microservizio writer per scrivere e leggere su database MySQL
@@ -74,6 +78,51 @@ app.get("/user/:userId", function (req, res) {
             })
             .catch((err) => {
                 res.send({
+                    status: "KO",
+                    message: err,
+                });
+            });
+    } else {
+        res.end({
+            status: "KO",
+            message: "No userId added in API",
+        });
+    }
+});
+
+app.get("/user/:userId/prospect", function (req, res) {
+    var userId = req.params.userId;
+    if (userId) {
+        // N.B.: MAI inviare dati senza parsarli. Si omette per semplicità.
+        MySQLManager.prepareProspect(userId)
+            .then((result) => {
+                // Esempio di gestione del dato
+                if (result && result[0]) {
+                    var prospectModel;
+                    switch (result[0].nome_bank) {
+                        case BANKS.INTESA:
+                            prospectModel = new IntesaSanpaolo(result[0]);
+                            break;
+                        case BANKS.CREDIT:
+                            prospectModel = new CreditAgricole(result[0]);
+                            break;
+                        case BANKS.BNL:
+                            prospectModel = new BNL(result[0]);
+                            break;
+                        default:
+                            prospectModel = new Prospect(result[0]);
+                            break;
+                    }
+                    console.log(prospectModel.getProspect());
+                }
+                // ----------------------------
+                res.send({
+                    status: "OK",
+                    result,
+                });
+            })
+            .catch((err) => {
+                res.end({
                     status: "KO",
                     message: err,
                 });
@@ -310,37 +359,6 @@ app.get("/prospects", function (req, res) {
                 message: err,
             });
         });
-});
-
-app.get("/prospect/status/:userId", function (req, res) {
-    var userId = req.params.userId;
-    if (userId) {
-        // N.B.: MAI inviare dati senza parsarli. Si omette per semplicità.
-        MySQLManager.prepareProspect(userId)
-            .then((result) => {
-                // Esempio di gestione del dato
-                if (result && result[0]) {
-                    const prospectModel = new Prospect(result[0]);
-                    console.log(prospectModel.getProspect());
-                }
-                // ----------------------------
-                res.send({
-                    status: "OK",
-                    result,
-                });
-            })
-            .catch((err) => {
-                res.end({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
-        res.end({
-            status: "KO",
-            message: "No userId added in API",
-        });
-    }
 });
 
 app.listen(port, () => {
