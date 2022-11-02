@@ -120,13 +120,13 @@ app.get("/user/:userId/prospect", function (req, res) {
                 });
             })
             .catch((err) => {
-                res.end({
+                res.send({
                     status: "KO",
                     message: err,
                 });
             });
     } else {
-        res.end({
+        res.send({
             status: "KO",
             message: "No userId added in API",
         });
@@ -171,7 +171,7 @@ app.post("/bank/save", (req, res) => {
                 });
             });
     } else {
-        res.end({
+        res.send({
             status: "KO",
             message: "Error in input",
         });
@@ -241,7 +241,7 @@ app.post("/product/save", (req, res) => {
                 });
             });
     } else {
-        res.end({
+        res.send({
             status: "KO",
             message: "Error in input",
         });
@@ -266,7 +266,7 @@ app.get("/product/:productId", function (req, res) {
                 });
             });
     } else {
-        res.end({
+        res.send({
             status: "KO",
             message: "No productId added in API",
         });
@@ -311,7 +311,7 @@ app.post("/prospect/save", (req, res) => {
                 });
             });
     } else {
-        res.end({
+        res.send({
             status: "KO",
             message: "Error in input",
         });
@@ -336,7 +336,7 @@ app.get("/prospect/:prospectId", function (req, res) {
                 });
             });
     } else {
-        res.end({
+        res.send({
             status: "KO",
             message: "No prospectId added in API",
         });
