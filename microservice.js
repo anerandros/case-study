@@ -14,227 +14,23 @@ const port = 3000;
  * Router microservizio
  */
 const userRouter = require("./routers/user.router");
+const bankRouter = require("./routers/bank.router");
+const productRouter = require("./routers/product.router");
+const prospectRouter = require("./routers/prospect.router");
 
 app.use(express.json());
 
-// Router user
+// Routes
 app.use("/user", userRouter);
+app.use("/bank", bankRouter);
+app.use("/product", productRouter);
+app.use("/prospect", prospectRouter);
 
 app.get("/", (req, res) => {
     res.send({
         status: "OK",
         message: "Microservice online",
     });
-});
-
-/*******************************************************
- * ********************** BANKS ************************
- */
-app.post("/bank/save", (req, res) => {
-    const parsedBody = req.body;
-    if (parsedBody) {
-        // Salviamo su DB
-        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        MySQLManager.addToTable(MySQLManager.tables.BANK, parsedBody)
-            .then(() => {
-                res.send({
-                    status: "OK",
-                    message: "Row correctly added to table",
-                });
-            })
-            .catch((err) => {
-                res.send({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
-        res.send({
-            status: "KO",
-            message: "Error in input",
-        });
-    }
-});
-
-app.get("/bank/:bankId", function (req, res) {
-    var bankId = req.params.bankId;
-    if (bankId) {
-        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        MySQLManager.readTableWhere(MySQLManager.tables.BANK, "id_bank", bankId)
-            .then((result) => {
-                res.send({
-                    status: "OK",
-                    result,
-                });
-            })
-            .catch((err) => {
-                res.send({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
-        res.end({
-            status: "KO",
-            message: "No bankId added in API",
-        });
-    }
-});
-
-app.get("/banks", function (req, res) {
-    MySQLManager.readTable(MySQLManager.tables.BANK)
-        .then((result) => {
-            res.send({
-                status: "OK",
-                result,
-            });
-        })
-        .catch((err) => {
-            res.send({
-                status: "KO",
-                message: err,
-            });
-        });
-});
-
-/*******************************************************
- * ******************** PRODUCT ************************
- */
-app.post("/product/save", (req, res) => {
-    const parsedBody = req.body;
-    if (parsedBody) {
-        // Salviamo su DB
-        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        MySQLManager.addToTable(MySQLManager.tables.PRODUCT, parsedBody)
-            .then(() => {
-                res.send({
-                    status: "OK",
-                    message: "Row correctly added to table",
-                });
-            })
-            .catch((err) => {
-                res.send({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
-        res.send({
-            status: "KO",
-            message: "Error in input",
-        });
-    }
-});
-
-app.get("/product/:productId", function (req, res) {
-    var productId = req.params.productId;
-    if (productId) {
-        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        MySQLManager.readTableWhere(MySQLManager.tables.PRODUCT, "id_product", productId)
-            .then((result) => {
-                res.send({
-                    status: "OK",
-                    result,
-                });
-            })
-            .catch((err) => {
-                res.send({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
-        res.send({
-            status: "KO",
-            message: "No productId added in API",
-        });
-    }
-});
-
-app.get("/products", function (req, res) {
-    MySQLManager.readTable(MySQLManager.tables.PRODUCT)
-        .then((result) => {
-            res.send({
-                status: "OK",
-                result,
-            });
-        })
-        .catch((err) => {
-            res.send({
-                status: "KO",
-                message: err,
-            });
-        });
-});
-
-/*******************************************************
- * ******************** PROSPECT ***********************
- */
-app.post("/prospect/save", (req, res) => {
-    const parsedBody = req.body;
-    if (parsedBody) {
-        // Salviamo su DB
-        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        MySQLManager.addToTable(MySQLManager.tables.PROSPECT, parsedBody)
-            .then(() => {
-                res.send({
-                    status: "OK",
-                    message: "Row correctly added to table",
-                });
-            })
-            .catch((err) => {
-                res.send({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
-        res.send({
-            status: "KO",
-            message: "Error in input",
-        });
-    }
-});
-
-app.get("/prospect/:prospectId", function (req, res) {
-    var prospectId = req.params.prospectId;
-    if (prospectId) {
-        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        MySQLManager.readTableWhere(MySQLManager.tables.PROSPECT, "id_prospect", prospectId)
-            .then((result) => {
-                res.send({
-                    status: "OK",
-                    result,
-                });
-            })
-            .catch((err) => {
-                res.send({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
-        res.send({
-            status: "KO",
-            message: "No prospectId added in API",
-        });
-    }
-});
-
-app.get("/prospects", function (req, res) {
-    MySQLManager.readTable(MySQLManager.tables.PROSPECT)
-        .then((result) => {
-            res.send({
-                status: "OK",
-                result,
-            });
-        })
-        .catch((err) => {
-            res.send({
-                status: "KO",
-                message: err,
-            });
-        });
 });
 
 app.listen(port, () => {

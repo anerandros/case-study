@@ -21,21 +21,21 @@ Il server ha i seguenti endpoint:
 
 -   POST /user/save
 -   GET /user/:id
--   GET user/:userId/prospect
--   GET /users
+-   GET /user/:userId/prospect
+-   GET /user/
 -   POST /bank/save
 -   GET /bank/:id
--   GET /banks
+-   GET /bank/
 -   POST /product/save
 -   GET /product/:id
--   GET /products
+-   GET /product/
 -   POST /prospect/save
 -   GET /prospect/:id
--   GET /prospects
+-   GET /prospect/
 
 Ogni endpoint di tipo `/entity/save` salva sulla tabella entity l'oggetto passato in POST. E' opportuno configurare le chiavi dell'oggetto così come i nomi delle colonne del database.
 Ogni endpoint di tipo `/entity/:id` eseguirà una ricerca (senza LIMIT) sulla chiave primaria della tabella entity.
-Ogni endpoint di tipo `/entityS` eseguirà una SELECT \* sulla tabella.
+Ogni endpoint di tipo `/entity/` eseguirà una SELECT \* sulla tabella.
 L'endpoint finale `/user/:userId/prospect` è una get che restituisce l'ultima prospect suggerita per l'utente con :userId come id_user. Si noti che viene rilasciata in risposta la tabella MySQL, ma internamente, nel codice, viene parsato opportunamento con il modello. Un ultimo appunto, si fa l'esempio di inserimento di un utente nel database, quindi POST su /user/save con formato raw JSON tramite Postman. Il payload sarà:
 
 ```
