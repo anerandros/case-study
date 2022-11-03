@@ -2,11 +2,11 @@ const path = require("path");
 
 module.exports = {
     entry: {
-        creditagricole: "./models/creditagricole.class.ts",
+        microservice: "./microservice.ts",
     },
     output: {
         filename: "[name].js",
-        path: path.resolve(__dirname, "dev"),
+        path: path.resolve(__dirname, "out"),
     },
     resolve: {
         extensions: [".ts", ".tsx", ".js"],

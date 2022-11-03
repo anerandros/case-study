@@ -5,7 +5,9 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node microservice.js",
+        "start": "npm run build:dev && node ./out/microservice.js",
+        "start:dev": "npm run build:dev && node ./out/microservice.js",
+        "start:prod": "npm run build:prod && node ./out/microservice.js",
         "build:dev": "webpack --mode development --config webpack.config.dev.js",
         "build:prod": "webpack --mode production --config webpack.config.prod.js"
     },
@@ -25,7 +27,8 @@
         "express": "^4.18.2",
         "ts-loader": "^9.4.1",
         "typescript": "^4.8.4",
-        "webpack": "^5.74.0"
+        "webpack": "^5.74.0",
+        "webpack-cli": "^4.10.0"
     },
     "dependencies": {
         "mysql": "^2.18.1"

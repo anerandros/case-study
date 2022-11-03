@@ -6,7 +6,7 @@
 const mysql = require("mysql");
 
 var MySQLManager = (function () {
-    var MYSQL_DEBUG = true;
+    var MYSQL_DEBUG: boolean = true;
 
     const _tables = {
         USERS: "user",
@@ -22,25 +22,25 @@ var MySQLManager = (function () {
         database: "mutuiamo",
     });
 
-    function _setDebug(valueToSet) {
+    function _setDebug(valueToSet: boolean) {
         MYSQL_DEBUG = valueToSet;
     }
 
     function _connectToDatabase() {
         return new Promise(function (resolve, reject) {
-            _con.connect(function (err) {
+            _con.connect(function (err: string) {
                 if (err) {
                     MYSQL_DEBUG && console.log("[Log] [MySQL] Error while connecting to MySQL");
                     reject(err);
                 } else {
                     MYSQL_DEBUG && console.log("[Log] [MySQL] Correctly connected to MySQL");
-                    resolve();
+                    resolve("OK");
                 }
             });
         });
     }
 
-    function _addToTable(tableName, data) {
+    function _addToTable(tableName: string, data) {
         // Identifico le colonne della tabella che serviranno nella query
         var columnsToAdd = Object.keys(data)
             .map((key, index, data) => {
