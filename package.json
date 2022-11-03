@@ -20,6 +20,7 @@
     },
     "homepage": "https://github.com/anerandros/case-study#readme",
     "devDependencies": {
+        "@types/express": "^4.17.14",
         "@types/node": "^18.11.9",
         "express": "^4.18.2",
         "ts-loader": "^9.4.1",

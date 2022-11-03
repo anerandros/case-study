@@ -158,4 +158,4 @@ var MySQLManager = (function () {
     };
 })();
 
-exports.MySQLManager = MySQLManager;
+export { MySQLManager };

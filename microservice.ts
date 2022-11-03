@@ -1,13 +1,13 @@
 /**
- * Import della libreria MySQL
+ * Import del manager MySQL
  */
-const { MySQLManager } = require("./mysql");
+import { MySQLManager } from "./mysql";
 
 /**
  * Configurazione microservizio writer per scrivere e leggere su database MySQL
  */
-const express = require("express");
-const app = express();
+import express, { Express, Request, Response } from "express";
+const app: Express = express();
 const port = 3000;
 
 /**
@@ -26,7 +26,7 @@ app.use("/bank", bankRouter);
 app.use("/product", productRouter);
 app.use("/prospect", prospectRouter);
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
     res.send({
         status: "OK",
         message: "Microservice online",
