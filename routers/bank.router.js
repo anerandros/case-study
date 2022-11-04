@@ -9,71 +9,61 @@ const { MySQLManager } = require("../mysql");
 var express = require("express");
 var router = express.Router();
 
-router.post("/save", (req, res) => {
+router.post("/save", async (req, res) => {
     const parsedBody = req.body;
-    if (parsedBody) {
+    try {
+        if (!parsedBody) {
+            throw new Error("Error in input");
+        }
         // Salviamo su DB
         // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        MySQLManager.addToTable(MySQLManager.tables.BANK, parsedBody)
-            .then(() => {
-                res.send({
-                    status: "OK",
-                    message: "Row correctly added to table",
-                });
-            })
-            .catch((err) => {
-                res.send({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
+        await MySQLManager.addToTable(MySQLManager.tables.BANK, parsedBody);
+        res.send({
+            status: "OK",
+            message: "Row correctly added to table",
+        });
+    } catch (err) {
         res.send({
             status: "KO",
-            message: "Error in input",
+            message: err,
         });
     }
 });
 
-router.get("/:bankId", function (req, res) {
+router.get("/:bankId", async (req, res) => {
     var bankId = req.params.bankId;
-    if (bankId) {
+    try {
+        if (!bankId) {
+            throw new Error("No ID added in API");
+        }
         // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        MySQLManager.readTableWhere(MySQLManager.tables.BANK, "id_bank", bankId)
-            .then((result) => {
-                res.send({
-                    status: "OK",
-                    result,
-                });
-            })
-            .catch((err) => {
-                res.send({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
-        res.end({
+        const result = await MySQLManager.readTableWhere(MySQLManager.tables.BANK, "id_bank", bankId);
+        res.send({
+            status: "OK",
+            result,
+        });
+    } catch (err) {
+        res.send({
             status: "KO",
-            message: "No bankId added in API",
+            message: err,
         });
     }
 });
 
-router.get("/", function (req, res) {
-    MySQLManager.readTable(MySQLManager.tables.BANK)
-        .then((result) => {
-            res.send({
-                status: "OK",
-                result,
-            });
-        })
-        .catch((err) => {
-            res.send({
-                status: "KO",
-                message: err,
-            });
+router.get("/", async (req, res) => {
+    try {
+        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
+        const results = await MySQLManager.readTable(MySQLManager.tables.BANK);
+        res.send({
+            status: "OK",
+            results,
         });
+    } catch (err) {
+        res.send({
+            status: "KO",
+            message: err,
+        });
+    }
 });
 
 module.exports = router;
