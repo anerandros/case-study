@@ -9,71 +9,61 @@ const { MySQLManager } = require("../mysql");
 var express = require("express");
 var router = express.Router();
 
-router.post("/save", (req, res) => {
+router.post("/save", async (req, res) => {
     const parsedBody = req.body;
-    if (parsedBody) {
+    try {
+        if (!parsedBody) {
+            throw new Error("Error in input");
+        }
         // Salviamo su DB
         // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        MySQLManager.addToTable(MySQLManager.tables.PRODUCT, parsedBody)
-            .then(() => {
-                res.send({
-                    status: "OK",
-                    message: "Row correctly added to table",
-                });
-            })
-            .catch((err) => {
-                res.send({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
+        await MySQLManager.addToTable(MySQLManager.tables.PRODUCT, parsedBody);
+        res.send({
+            status: "OK",
+            message: "Row correctly added to table",
+        });
+    } catch (err) {
         res.send({
             status: "KO",
-            message: "Error in input",
+            message: err,
         });
     }
 });
 
-router.get("/:productId", function (req, res) {
+router.get("/:productId", async (req, res) => {
     var productId = req.params.productId;
-    if (productId) {
+    try {
+        if (!productId) {
+            throw new Error("No ID added in API");
+        }
         // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
-        MySQLManager.readTableWhere(MySQLManager.tables.PRODUCT, "id_product", productId)
-            .then((result) => {
-                res.send({
-                    status: "OK",
-                    result,
-                });
-            })
-            .catch((err) => {
-                res.send({
-                    status: "KO",
-                    message: err,
-                });
-            });
-    } else {
+        const result = await MySQLManager.readTableWhere(MySQLManager.tables.PRODUCT, "id_product", productId);
+        res.send({
+            status: "OK",
+            result,
+        });
+    } catch (err) {
         res.send({
             status: "KO",
-            message: "No productId added in API",
+            message: err,
         });
     }
 });
 
-router.get("/", function (req, res) {
-    MySQLManager.readTable(MySQLManager.tables.PRODUCT)
-        .then((result) => {
-            res.send({
-                status: "OK",
-                result,
-            });
-        })
-        .catch((err) => {
-            res.send({
-                status: "KO",
-                message: err,
-            });
+router.get("/", async (req, res) => {
+    try {
+        // N.B.: MAI inviare dati in DB senza parsarli. Si omette per semplicità.
+        const results = await MySQLManager.readTable(MySQLManager.tables.PRODUCT);
+        res.send({
+            status: "OK",
+            results,
         });
+    } catch (err) {
+        res.send({
+            status: "KO",
+            message: err,
+        });
+    }
 });
 
 module.exports = router;
